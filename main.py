@@ -37,13 +37,22 @@ word_vectorizer.fit(text)
 train_features = word_vectorizer.transform(train_text)
 test_features = word_vectorizer.transform(test_text)
 
-
 print ("Creating model")
 # Sample Logistic Regression model for "toxic" comment feature
 model = LogisticRegression(C = 0.1, solver='sag')
 model.fit(train_features, train_data["toxic"])
 predicted_value = model.predict(train_features)
 print ("Model created")
+
+example = ["Enter a comment"]
+example_text = pd.DataFrame(example)
+op = word_vectorizer.transform(example_text[0])
+example_predict = model.predict(op)
+print(example_predict)
+if(example_predict):
+	print(example, "is a toxic comment")
+else:
+	print(example, "is not a toxic comment")
 
 # Accuracy Calculation for sample logistic regression model
 true_value = train_data["toxic"]
