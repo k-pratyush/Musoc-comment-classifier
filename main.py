@@ -53,14 +53,14 @@ train_features = tfidf_word_vectorizer.transform(train_text)
 test_features = tfidf_word_vectorizer.transform(test_text)
 
 
-logging.debug("Creating naive bayes model with count vectorizer")
+#logging.debug("Creating naive bayes model with count vectorizer")
 # Sample NB model for "toxic" comment feature
-toxic_model_nb = MultinomialNB()
-toxic_model_nb.fit(train_features_cv, train_data['toxic'])
-predicted_value_nb = toxic_model_nb.predict(train_features_cv)
+#toxic_model_nb = MultinomialNB()
+#toxic_model_nb.fit(train_features_cv, train_data['toxic'])
+#predicted_value_nb = toxic_model_nb.predict(train_features_cv)
 
 
-
+'''
 # Accuracy Calculation for sample NB model
 true_value = train_data["toxic"]
 true_value_numpy = true_value.to_numpy()
@@ -75,7 +75,7 @@ accuracy = float(count/total)*100
 print("Model accuracy for NB obtained: ", accuracy)
 logging.debug("Model accuracy for NB obtained: " + str(accuracy))
 
-
+'''
 
 
 logging.debug("Creating logistic regression model with tfidf vectorizer")
@@ -101,15 +101,15 @@ accuracy = float(count/total)*100
 print("Model accuracy for logistic regression obtained: ", accuracy)
 logging.debug("Model accuracy for logistic regression obtained: " + str(accuracy))
 
-'''
-example = ['Enter a text']
-example_text = pd.DataFrame(example)
-op = count_word_vectorizer.transform(example_text[0])
-example_predict = toxic_model_nb.predict_proba(op)
-print(example_predict)
-'''
 
 '''
+example = ['Enter Text']
+example_text = pd.DataFrame(example)
+op = count_word_vectorizer.transform(example_text[0])
+example_predict = toxic_model_nb.predict(op)
+print(example_predict)
+
+
 if(example_predict):
 	print(example, "is a toxic comment")
 else:
@@ -117,7 +117,6 @@ else:
 '''
 
 
-'''
 # Logistic regression model creation
 output_logistic_regression = pd.DataFrame.from_dict({'id': test_data['id']})
 
@@ -125,6 +124,17 @@ for feature in test_classes:
     model = LogisticRegression(C=0.1, solver='sag')
     model.fit(train_features, train_data[feature])
     output_logistic_regression[feature] = model.predict_proba(test_features)[:,1]
-    
+
+output_logistic_regression.to_csv("Datasets/lg_results.csv")
+print(output_logistic_regression)
+
+output_nb_model = pd.DataFrame.from_dict({'id': test_data['id']})
+
+for feature in test_classes:
+    model_nb = MultinomialNB()
+    model_nb.fit(train_features, train_data[feature])
+    output_nb_model[feature] = model.predict_proba(test_features_cv)[:,1]
+
+output_nb_model.to_csv("Datasets/nb_results.csv")
+print(output_nb_model)
 logging.debug("Completed execution")
-'''
